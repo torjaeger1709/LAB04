@@ -24,7 +24,10 @@ namespace LAB04
 
         private void button4_Click(object sender, EventArgs e)
         {
-
+            BT4 bT4 = new BT4();
+            bT4.Show();
+            Button btn = sender as Button;
+            btn.BackColor = Color.LightGreen;
         }
 
         private void button5_Click(object sender, EventArgs e)
