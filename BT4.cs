@@ -1,6 +1,4 @@
-﻿#nullable disable // Tắt các cảnh báo null warning màu vàng
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -16,33 +14,21 @@ using System.Diagnostics;
 
 namespace LAB04
 {
-    // CLASS FORM CHÍNH
     public partial class BT4 : Form
     {
-        // 1. Danh sách phim lấy từ Web
         private List<MovieInfo> movieList = new List<MovieInfo>();
-
-        // 2. Quản lý các ghế đang ĐƯỢC CHỌN (màu xanh lá)
-        // Key: (Tên phim, Số phòng) -> Value: Danh sách tên ghế
         private Dictionary<(string movie, int room), List<string>> selectedSeats
             = new Dictionary<(string movie, int room), List<string>>();
-
-        // 3. Quản lý thông tin CHI TIẾT các ghế ĐÃ ĐẶT (màu cam)
-        // Key: (Tên phim, Số phòng, Tên ghế) -> Value: Thông tin người đặt (Bill)
         private Dictionary<(string movie, int room, string seat), BillInfo> seatHistory
             = new Dictionary<(string movie, int room, string seat), BillInfo>();
 
         public BT4()
         {
             InitializeComponent();
-
-            // Gán sự kiện
             this.cbMovie.SelectedIndexChanged += cbMovie_SelectedIndexChanged;
             this.cbRoom.SelectedIndexChanged += cbRoom_SelectedIndexChanged;
             if (pbPoster != null) this.pbPoster.Click += pbPoster_Click;
         }
-
-        // --- CÁC HÀM XỬ LÝ SỰ KIỆN ---
 
         private async void ReadFile_Click(object sender, EventArgs e)
         {
@@ -53,7 +39,6 @@ namespace LAB04
                 progressBar1.Value = 10;
                 using (HttpClient client = new HttpClient())
                 {
-                    // Giả lập trình duyệt để tránh bị chặn
                     client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
 
                     string html = await client.GetStringAsync(url);
@@ -61,8 +46,6 @@ namespace LAB04
                     doc.LoadHtml(html);
 
                     progressBar1.Value = 30;
-
-                    // XPath lấy danh sách phim
                     var movieNodes = doc.DocumentNode.SelectNodes("//div[contains(@class, 'tab-content')]//div[contains(@class, 'col-')][.//img and .//a]");
 
                     if (movieNodes == null || movieNodes.Count == 0)
@@ -79,8 +62,6 @@ namespace LAB04
                     foreach (var node in movieNodes)
                     {
                         MovieInfo movie = new MovieInfo();
-
-                        // Lấy tên và link
                         var titleNode = node.SelectSingleNode(".//h3/a") ?? node.SelectSingleNode(".//div[contains(@class,'film-info')]//a");
                         if (titleNode == null) titleNode = node.SelectSingleNode(".//a[contains(@href, 'chi-tiet-phim')]");
 
@@ -92,25 +73,28 @@ namespace LAB04
                         }
                         else continue;
 
-                        // Lấy ảnh
                         var imgNode = node.SelectSingleNode(".//img");
                         if (imgNode != null) movie.ImageUrl = imgNode.GetAttributeValue("src", "");
 
-                        // Giả lập dữ liệu phòng/giá
                         movie.Price = 90000;
                         movie.Rooms = new List<int> { 1, 2, 3 };
 
                         movieList.Add(movie);
                         cbMovie.Items.Add(movie.Name);
-
                         progressBar1.Value++;
                     }
 
-                    // Lưu JSON
+                    int maxWidth = cbMovie.Width;
+                    foreach (var item in cbMovie.Items)
+                    {
+                        int w = TextRenderer.MeasureText(item.ToString(), cbMovie.Font).Width;
+                        if (w > maxWidth) maxWidth = w;
+                    }
+                    cbMovie.DropDownWidth = maxWidth + 20;
+
                     string json = JsonConvert.SerializeObject(movieList, Formatting.Indented);
                     File.WriteAllText("movies.json", json);
-
-                    MessageBox.Show($"Đã cập nhật {movieList.Count} phim mới!");
+                    progressBar1.Value = progressBar1.Maximum;
                     if (cbMovie.Items.Count > 0) cbMovie.SelectedIndex = 0;
                 }
             }
@@ -167,7 +151,7 @@ namespace LAB04
                 for (int c = 0; c < cols; c++)
                 {
                     string seatName = rowNames[r] + (c + 1);
-                    var keySeat = (movieName, room, seatName); // Key để tra cứu lịch sử đặt
+                    var keySeat = (movieName, room, seatName);
 
                     Button btn = new Button();
                     btn.Name = seatName;
@@ -177,24 +161,20 @@ namespace LAB04
                     btn.Top = r * (btnSize + padding);
                     btn.Click += Seat_Click;
 
-                    // 1. Kiểm tra xem ghế đã được Mua chưa (Màu Cam)
                     if (seatHistory.ContainsKey(keySeat))
                     {
                         btn.BackColor = Color.Orange;
-                        // QUAN TRỌNG: Vẫn để Enable = true để click vào xem thông tin
-                        btn.Enabled = true;
+                        btn.Enabled = true; // Cho phép click để xem lại bill
                     }
-                    // 2. Kiểm tra xem ghế đang được Chọn để mua (Màu Xanh Lá)
                     else if (selectedSeats.ContainsKey(keySelect) && selectedSeats[keySelect].Contains(seatName))
                     {
                         btn.BackColor = Color.LightGreen;
-                        btn.Tag = GetOriginalColor(seatName, veVot, veVIP); // Lưu màu gốc
+                        btn.Tag = GetOriginalColor(seatName, veVot, veVIP);
                     }
-                    // 3. Ghế trống (Màu gốc)
                     else
                     {
                         btn.BackColor = GetOriginalColor(seatName, veVot, veVIP);
-                        btn.Tag = btn.BackColor; // Lưu màu gốc vào Tag để restore
+                        btn.Tag = btn.BackColor;
                     }
 
                     panelSeats.Controls.Add(btn);
@@ -220,7 +200,7 @@ namespace LAB04
             string movieName = cbMovie.SelectedItem.ToString();
             int room = int.Parse(cbRoom.SelectedItem.ToString().Replace("Phòng ", ""));
 
-            // --- TRƯỜNG HỢP 1: Bấm vào ghế ĐÃ BÁN (Màu Cam) ---
+            // Xem lại lịch sử đặt vé
             var keySeat = (movieName, room, seat);
             if (seatHistory.ContainsKey(keySeat))
             {
@@ -231,33 +211,28 @@ namespace LAB04
                               $"Tổng tiền hóa đơn: {bill.TotalAmount:N0} đ\n" +
                               $"Thời gian đặt: {bill.BookingTime:dd/MM/yyyy HH:mm:ss}";
                 MessageBox.Show(info, "Chi tiết đặt vé", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return; // Kết thúc, không cho chọn ghế này nữa
+                return;
             }
 
-            // --- TRƯỜNG HỢP 2: Chọn/Bỏ chọn ghế để mua ---
+            // Chọn ghế mới
             var keySelect = (movieName, room);
             if (!selectedSeats.ContainsKey(keySelect)) selectedSeats[keySelect] = new List<string>();
 
             if (selectedSeats[keySelect].Contains(seat))
             {
-                // Bỏ chọn -> Trả về màu gốc
                 selectedSeats[keySelect].Remove(seat);
                 btn.BackColor = (Color)btn.Tag;
             }
             else
             {
-                // Chọn mới -> Màu xanh lá
                 selectedSeats[keySelect].Add(seat);
                 btn.BackColor = Color.LightGreen;
             }
-
-            // Tạm thời hiển thị 0đ cho đến khi nhấn Tính tiền
             lblResult.Text = "Tổng tiền: ... (Nhấn Tính Tiền)";
         }
 
         private void btnCalculate_Click(object sender, EventArgs e)
         {
-            // Kiểm tra tên khách hàng
             if (txtCustomerName == null || string.IsNullOrWhiteSpace(txtCustomerName.Text))
             {
                 MessageBox.Show("Vui lòng nhập Tên Khách Hàng trước khi thanh toán!", "Thiếu thông tin");
@@ -269,11 +244,10 @@ namespace LAB04
             string customerName = txtCustomerName.Text.Trim();
             List<string> currentBookingSeats = new List<string>();
 
-            // Tính tiền cho các ghế đang chọn (trong selectedSeats)
             foreach (var kv in selectedSeats)
             {
                 string movieName = kv.Key.movie;
-                int room = kv.Key.room;
+                // int room = kv.Key.room; // Không cần dùng biến này ở đây nhưng để đây cũng được
                 var movieObj = movieList.FirstOrDefault(m => m.Name == movieName);
                 if (movieObj == null) continue;
 
@@ -281,13 +255,12 @@ namespace LAB04
 
                 foreach (var seat in kv.Value)
                 {
-                    // Tính giá vé
                     int seatPrice = basePrice;
                     if (seat == "B2" || seat == "B3" || seat == "B4") seatPrice = basePrice * 2;
                     else if (seat == "A1" || seat == "A5" || seat == "C1" || seat == "C5") seatPrice = (int)(basePrice * 0.25);
 
                     total += seatPrice;
-                    currentBookingSeats.Add(seat); // Thêm vào danh sách tạm để tạo Bill
+                    currentBookingSeats.Add(seat);
                 }
             }
 
@@ -297,7 +270,6 @@ namespace LAB04
                 return;
             }
 
-            // Tạo Bill thông tin chung
             BillInfo newBill = new BillInfo
             {
                 CustomerName = customerName,
@@ -306,7 +278,7 @@ namespace LAB04
                 BookedSeats = new List<string>(currentBookingSeats)
             };
 
-            // Lưu dữ liệu vào seatHistory (Chuyển trạng thái sang Đã bán)
+            // Lưu vào lịch sử và xóa khỏi danh sách đang chọn
             foreach (var kv in selectedSeats)
             {
                 string movieName = kv.Key.movie;
@@ -315,23 +287,15 @@ namespace LAB04
                 foreach (var seat in kv.Value)
                 {
                     var keySeat = (movieName, room, seat);
-                    // Lưu bill cho từng ghế để click vào ghế nào cũng xem được bill đó
                     seatHistory[keySeat] = newBill;
                 }
             }
-
-            // Xóa danh sách đang chọn (vì đã mua xong)
             selectedSeats.Clear();
-
-            // Vẽ lại ghế
             LoadSeatsGrid();
 
-            // Hiển thị Bill JSON
             string jsonBill = JsonConvert.SerializeObject(newBill, Formatting.Indented);
             lblResult.Text = "Tổng tiền: " + total.ToString("N0") + " đ";
             MessageBox.Show($"Thanh toán thành công!\n\n{jsonBill}", "Hóa đơn điện tử");
-
-            // Reset ô nhập tên
             txtCustomerName.Text = "";
         }
 
@@ -367,7 +331,6 @@ namespace LAB04
 
         private async Task WriteStatisticsToFile(string path)
         {
-            // Logic thống kê giữ nguyên, lấy dữ liệu từ seatHistory
             try
             {
                 progressBar1.Value = 0; progressBar1.Maximum = movieList.Count;
@@ -375,14 +338,9 @@ namespace LAB04
 
                 foreach (var m in movieList)
                 {
-                    // Đếm số ghế đã bán trong seatHistory cho phim này
                     int sold = seatHistory.Keys.Count(k => k.movie == m.Name);
-
                     int totalSeats = 15 * m.Rooms.Count;
-                    int revenue = sold * m.Price; // Tính đơn giản theo giá gốc để thống kê nhanh
-
-                    // Nếu muốn tính doanh thu chính xác từng vé (VIP/Thường) thì phải loop qua seatHistory values
-                    // Ở đây làm đơn giản theo yêu cầu bài cũ:
+                    int revenue = sold * m.Price;
 
                     report.Add(new
                     {
@@ -409,8 +367,7 @@ namespace LAB04
         }
     }
 
-    // --- CÁC CLASS DỮ LIỆU (ĐỂ Ở CUỐI CÙNG) ---
-
+    // CÁC CLASS PHỤ PHẢI ĐỂ Ở DƯỚI CÙNG
     public class MovieInfo
     {
         public string Name { get; set; }

@@ -61,7 +61,7 @@
             progressBar1.Location = new Point(488, 162);
             progressBar1.Margin = new Padding(3, 4, 3, 4);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new Size(276, 28);
+            progressBar1.Size = new Size(244, 28);
             progressBar1.TabIndex = 52;
             // 
             // label8
@@ -109,7 +109,7 @@
             // SCREEN
             // 
             SCREEN.AutoSize = true;
-            SCREEN.Location = new Point(140, 8);
+            SCREEN.Location = new Point(119, 6);
             SCREEN.Name = "SCREEN";
             SCREEN.Size = new Size(62, 20);
             SCREEN.TabIndex = 0;
@@ -119,7 +119,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label6.Location = new Point(780, 580);
+            label6.Location = new Point(961, 588);
             label6.Name = "label6";
             label6.Size = new Size(134, 20);
             label6.TabIndex = 47;
@@ -140,7 +140,7 @@
             // 
             label5.AutoSize = true;
             label5.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label5.Location = new Point(780, 555);
+            label5.Location = new Point(961, 563);
             label5.Name = "label5";
             label5.Size = new Size(169, 20);
             label5.TabIndex = 46;
@@ -150,7 +150,7 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Microsoft Sans Serif", 10F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label4.Location = new Point(780, 530);
+            label4.Location = new Point(961, 538);
             label4.Name = "label4";
             label4.Size = new Size(143, 20);
             label4.TabIndex = 45;
@@ -177,14 +177,14 @@
             panel2.Location = new Point(0, 0);
             panel2.Margin = new Padding(3, 4, 3, 4);
             panel2.Name = "panel2";
-            panel2.Size = new Size(966, 112);
+            panel2.Size = new Size(1149, 112);
             panel2.TabIndex = 42;
             // 
             // panel1
             // 
             panel1.BackColor = SystemColors.AppWorkspace;
             panel1.Controls.Add(SCREEN);
-            panel1.Location = new Point(535, 222);
+            panel1.Location = new Point(716, 230);
             panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
             panel1.Size = new Size(292, 36);
@@ -212,7 +212,7 @@
             // 
             // panelSeats
             // 
-            panelSeats.Location = new Point(544, 266);
+            panelSeats.Location = new Point(725, 274);
             panelSeats.Margin = new Padding(3, 4, 3, 4);
             panelSeats.Name = "panelSeats";
             panelSeats.Size = new Size(300, 225);
@@ -249,7 +249,7 @@
             cbRoom.Location = new Point(238, 449);
             cbRoom.Margin = new Padding(3, 4, 3, 4);
             cbRoom.Name = "cbRoom";
-            cbRoom.Size = new Size(279, 30);
+            cbRoom.Size = new Size(444, 30);
             cbRoom.TabIndex = 35;
             // 
             // cbMovie
@@ -260,7 +260,7 @@
             cbMovie.Location = new Point(238, 353);
             cbMovie.Margin = new Padding(3, 4, 3, 4);
             cbMovie.Name = "cbMovie";
-            cbMovie.Size = new Size(279, 30);
+            cbMovie.Size = new Size(444, 30);
             cbMovie.TabIndex = 34;
             // 
             // pbPoster
@@ -286,16 +286,16 @@
             // txtCustomerName
             // 
             txtCustomerName.Font = new Font("Segoe UI", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            txtCustomerName.Location = new Point(233, 266);
+            txtCustomerName.Location = new Point(238, 259);
             txtCustomerName.Name = "txtCustomerName";
-            txtCustomerName.Size = new Size(267, 31);
+            txtCustomerName.Size = new Size(444, 31);
             txtCustomerName.TabIndex = 56;
             // 
             // BT4
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(966, 682);
+            ClientSize = new Size(1149, 682);
             Controls.Add(txtCustomerName);
             Controls.Add(label9);
             Controls.Add(pbPoster);
