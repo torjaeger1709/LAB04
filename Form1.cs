@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,7 +19,10 @@ namespace LAB04
 
         private void button2_Click(object sender, EventArgs e)
         {
-
+            BT2 bt2 = new BT2();
+            bt2.Show();
+            Button btn = sender as Button;
+            btn.BackColor = Color.LightGreen;
         }
 
         private void button4_Click(object sender, EventArgs e)
