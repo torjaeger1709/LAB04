@@ -25,6 +25,13 @@ namespace LAB04
             btn.BackColor = Color.LightGreen;
         }
 
+        private void button3_Click(object sender, EventArgs e)
+        {
+            BT3 bt3 = new BT3();
+            bt3.Show();
+            Button btn = sender as Button;
+            btn.BackColor = Color.LightGreen;
+        }
         private void button4_Click(object sender, EventArgs e)
         {
             BT4 bT4 = new BT4();
@@ -41,10 +48,10 @@ namespace LAB04
             btn.BackColor = Color.LightGreen;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button7_Click(object sender, EventArgs e)
         {
-            BT3 bt3 = new BT3();
-            bt3.Show();
+            Login loginForm = new Login();
+            loginForm.Show();
             Button btn = sender as Button;
             btn.BackColor = Color.LightGreen;
         }
