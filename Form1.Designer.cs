@@ -145,6 +145,7 @@
             button6.TabIndex = 32;
             button6.Text = "BT6";
             button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
             // 
             // button5
             // 
@@ -199,6 +200,7 @@
             button1.TabIndex = 27;
             button1.Text = "BT1";
             button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // Form1
             // 
