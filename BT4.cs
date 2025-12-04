@@ -27,7 +27,6 @@ namespace LAB04
             InitializeComponent();
             this.cbMovie.SelectedIndexChanged += cbMovie_SelectedIndexChanged;
             this.cbRoom.SelectedIndexChanged += cbRoom_SelectedIndexChanged;
-            if (pbPoster != null) this.pbPoster.Click += pbPoster_Click;
         }
 
         private async void ReadFile_Click(object sender, EventArgs e)
@@ -302,10 +301,13 @@ namespace LAB04
         private void pbPoster_Click(object sender, EventArgs e)
         {
             if (cbMovie.SelectedItem == null) return;
+
             var movie = movieList.FirstOrDefault(m => m.Name == cbMovie.SelectedItem.ToString());
+
             if (movie != null && !string.IsNullOrEmpty(movie.DetailUrl))
             {
-                Process.Start(new ProcessStartInfo { FileName = movie.DetailUrl, UseShellExecute = true });
+                frmBrowser frm = new frmBrowser(movie.DetailUrl);
+                frm.Show();
             }
         }
 
