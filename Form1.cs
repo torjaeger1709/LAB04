@@ -56,5 +56,13 @@ namespace LAB04
             Button btn = sender as Button;
             btn.BackColor = Color.LightGreen;
         }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            BT6 bt6 = new BT6();
+            bt6.Show();
+            Button btn = sender as Button;
+            btn.BackColor = Color.LightGreen;
+        }
     }
 }

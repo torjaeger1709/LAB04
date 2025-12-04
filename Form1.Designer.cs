@@ -144,6 +144,7 @@
             button6.TabIndex = 32;
             button6.Text = "BT6";
             button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
             // 
             // button5
             // 
